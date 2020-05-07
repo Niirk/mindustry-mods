@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <meta charset="utf8">
+    <link rel="stylesheet" type="text/css" href="../css/readme.css">
+    <title>commandblocks - Mindustry Mods</title>
+    
+  </head>
+  
+  <body>
+
+    <header>
+      
+<a href="../index.html"><h1>Mindustry Mods</h1></a>      
+
+    </header>
+    <content>
+      
+
+<p>
+  <code>sk7725/Commandblocks</code>
+  <span class="version">v0.3</a>
+  <a href="https://github.com/sk7725/Commandblocks">repository</a>
+  <a href="https://github.com/sk7725/Commandblocks/archive/master.zip">zip</a>
+</p>
+
+<h1>Commandblocks</h1>
+<p>Mindustry Command Block Mod(MCBM) <br />
+This mod adds Minecraft-like Command Blocks, along with other blocks. <br />
+This is currently in development.</p>
+<h2>Blocks</h2>
+<ul>
+<li>Command Block <br />
+Executes command once when power requirements are met.   </li>
+<li>Chained Command Block <br />
+Executes command when the command block it is facing away from has executed successfully. <br />
+It will execute one tick after the command block it is facing away from.   </li>
+<li>Repeating Command Block <br />
+Executes command every tick when power requirements are met.   </li>
+<li>Unit Command Block <br />
+Executes command as an unit, for the unit stepping on this block. <br />
+The unit has to be on this block and not fly.   </li>
+<li>Unit Tagger <br />
+Remembers the last unit that stepped on this tile, using its message as the tag.   <br />
+The unit has to be on this block and not fly, and only a single unit will be tagged. <br />
+If the block is removed, the tagged unit will be untagged.  <br />
+For more information on tags, refer to <code>Target Selectors</code>.    </li>
+<li>Position Reader <br />
+Gets the x and y coordinates where this block is placed. <br />
+<code>Pos: ( tile.x , tile.y ) / Rot: tile.rotation()</code></li>
+<li>Tile Reader <br />
+Gets the information of the tile this block is facing when this block is placed. <br />
+<code>floor.name:block.name:overlay[x,y] entity=entity.getClass():getTeam()</code></li>
+<li>Tile Entity Reader <br />
+Gets the information of the tile entity this block is facing when this block is placed. <br />
+Is empty if no tile entity is found. <br />
+<code>TileEntity{tile=tile, health=health}</code></li>
+<li>Mod Reader <br />
+Gets the information of the mod.   </li>
+<li>Note Player <br />
+Plays a note when the power requirement is met. Instrument changes depending on the wall under it.   </li>
+<li>Music Player <br />
+Plays an array of notes. First, specify the BPM, then the notes seperated by spaces, using x for rests. End the note with - for double length, and / for half(these may be stacked). <br />
+<code>150 6e 6d 6c 6d 6e 6e 6e- 6d 6d 6d x 6e 6e 6e-</code></li>
+<li>Button(&amp;Large Button) <br />
+Produces power when clicked.   </li>
+<li>Pressure Plate(&amp;Large Pressure Plate) <br />
+Produces power when stepped on. The large pressure plate can detect flying units, too.   </li>
+<li>Detecting Router(&amp;Detecting Distributor) <br />
+Produces power when holding items. Works like its original counterpart.   </li>
+<li>Announcement <br />
+Works like the Message but it can only be written by the admins.   </li>
+</ul>
+<h2>Commands</h2>
+<p>Commands will fail to work when an error happens, params are invalid , or requirements below are not made. <br />
+Starting the command with a / is optional. <br />
+Some params are optional.   </p>
+<h3>/say string:text</h3>
+<p>In multiplayer, sends text to all players.</p>
+<h3>/title pos:x pos:y</h3>
+<p>Emits text to all players.
+  + /title pos:x pos:y top|world int:duration string:text <br />
+    - top <br />
+    shows the text as a popup at the top of the screen. <br />
+    - world <br />
+    Shows the text as a popup at x,y. <br />
+  + /title pos:x pos:y string:functionname (arguments)  <br />
+  Runs an UI function called functionname that can show text in various forms. <br />
+  Refer <a href="https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/core/UI.java">here</a> for the list of functions.   </p>
+<h3>/overwrite string:text</h3>
+<p>Overwrites this command block's content to text.</p>
+<h3>/setblock pos:x pos:y string:block (int:rotation) (int:team) (replace|keep|build|force)</h3>
+<p>Sets the tile at x,y to the specified block.<br />
+Rotation should be between 0 and 3, default is 0.<br />
+Team should be -1 and 255, default is -1. When team is -1, the team is set to the executor's team.<br />
+Fails if the previous block is already the same as the current block.<br />
+<code>replace</code> destroys the previous block, and sets a new block. (default) <br />
+<code>keep</code> only sets the block if previous block is Air. <br />
+<code>build</code> destroys the previous block, and sets a new block, as if a player built it. <br />
+<code>force</code> sets a new block. crashes the game if the previous block is a tile entity.   </p>
+<h3>/execute</h3>
+<p>Executes a command from another tile or unit's perspective.<br />
+Fails if the executed command fails, or the tile or entity is not found. <br />
+<code>execute</code> is optional, one can start a command with <code>at/as</code> <br />
+  + /execute at pos:x pos:y string:command <br />
+    Executes as a tile at x,y. <br />
+  + /execute as target:target string:command <br />
+    Executes as a target.   </p>
+<h3>/f(/function) string:functionname (arguments)</h3>
+<p>Runs a function of the executor called functionname. Fails if the executor is neither a tile nor an unit.   <br />
+Refer <a href="https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/world/Tile.java">here</a> for the list of functions (if executor is a Tile), or <a href="https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/entities/type/Unit.java">here</a> (if executor is an Unit). <br />
+Can only be used inside an /execute. <br />
+  + Example <br />
+<code>execute at ~ ~2 function setTeam team:5
+  //sets the team of the tile 2 blocks to the north of the executor to 5.
+  //calls setTeam( Team.get(5) ) of the tile 2 blocks to the north of the executor.</code></p>
+<h3>/fb(/functionblock) string:functionname (arguments)</h3>
+<p>Runs a function of the block of the executor called functionname. Fails if the executor is not a tile. <br />
+Refer <a href="https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/world/Block.java">here</a> or <a href="https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/world/BlockStorage.java">here</a> for the list of functions. <br />
+Can only be used inside an /execute. <br />
+  + Example <br />
+<code>execute at ~ ~2 functionblock handleStack item:copper 5 tile:~,~ js:null
+  //gives 5 copper to the block 2 blocks to the north of the executor.</code></p>
+<h3>/fe(/functionent) string:functionname (arguments)</h3>
+<p>Runs a function of the tile entity of the executor called functionname. Fails if the executor is not a tile. <br />
+Refer <a href="https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/entities/type/TileEntity.java">here</a> for the list of functions. <br />
+Can only be used inside an /execute. <br />
+  + Example <br />
+<code>execute at ~ ~2 functionent damage 50
+  //damages the tile 2 blocks to the north of the executor by 50.</code></p>
+<h3>/gamerule string:rulename (boolean|int:state)</h3>
+<p>Sets the gamerule or gets the current gamerule. <br />
+Fails if no such gamerule exists, or state is not specified and the current state of the gamerule is false or 0. <br />
+<code>commandBlockOutput</code> whether to log command failures in multiplayer chat. <br />
+<code>commandBlockTitle</code> whether to log command failures as a popup. <br />
+<code>setWave</code> sets current wave. <br />
+For more gamerules, refer <a href="https://github.com/Anuken/Mindustry/blob/master/core/src/mindustry/game/Rules.java">here</a>.   </p>
+<h3>/fx(/particle) string:effect (pos:x pos:y) (string:color)</h3>
+<p>Plays particle effects on the given position. Fails if coordinates are below 0.   </p>
+<h3>/playsound string:effect (pos:x pos:y) (int:volume)</h3>
+<p>Plays a sound on the given position. Fails if coordinates are below 0. Default volume is 0.5.   </p>
+<h3>/give string:item (int:amount)</h3>
+<p>Gives the executor an amount of an item. <br />
+If the executor is a tile, amount may be negative. <br />
+Fails if amount is negative and executor is not a tile, or amount is negative and less than 1 items were removed.   </p>
+<h3>/clear</h3>
+<p>Clears the executor of the item. Fails if the executor does not have an inventory. <br />
+  - /clear string:item <br />
+    if the executor is a tile. Fails if less then 1 items are removed. <br />
+  - /clear<br />
+    if the executor is an unit.   </p>
+<h3>/effect target:target string:statuseffect (int:duration) (int:level) (boolean:hideparticle)</h3>
+<p>Gives the executor a status effect for the given duration of seconds. <br />
+Fails if executor is not an unit. Some effects are custom potion effects, which are affected by the given level and hideparticle. <br />
+<code>speed</code> sets speedMultiplier to level*0.1+1.1. <br />
+<code>slowness</code> sets speedMultiplier to -1*level*0.05+0.95. <br />
+<code>strength</code> sets damageMultiplier to level*0.1+1.1. <br />
+<code>weakness</code> sets damageMultiplier to -1*level*0.05+0.95. <br />
+<code>resistance</code> sets armorMultiplier to level*0.2+1.1. <br />
+<code>pain</code> sets armorMultiplier to -1*level*0.05+0.95. <br />
+<code>poison</code> gives damage of 0.05*level+0.05 every frame. Kills, unlike what it looks like. <br />
+<code>wither</code> gives damage of 0.1*level+0.1 every frame. Kills. <br />
+<code>instant_damage</code> gives damage of 10*level+10. Duration is overridden. <br />
+<code>burning, freezing, wet, melting, tarred, overdrive, shielded, shocked, corroded, boss</code> are vanilla status effects. Refer <a href="https://simonwoodburyforget.github.io/mindustry-modding/#StatusEffect">here</a>.   </p>
+<h3>/kill (target:target)</h3>
+<p>Kills the target. The target is the executor if unspecified. Fails if the target is not an unit.   </p>
+<h3>/assert</h3>
+<p>The executor asserts dominance.   </p>
+<h3>/configure pos:x pos:y (int|boolean:value)</h3>
+<p>Configures a block at the specified position to a value. <br />
+Doors accept boolean, others accept intergers. Value may be unspecified for doors(then it will toggle). <br />
+Fails if the block is not configurable, or if it is a door that is already in the given state.   </p>
+<h3>/tp target:target</h3>
+<p>Teleports a target to a destination.<br />
+Fails if the destination is an array of multiple targets. <br />
+  + /tp target:target target:destination <br />
+    Teleports to the destination's coordinates. The destination target must specify only one entity. <br />
+  + /tp target:target pos:x pos:y <br />
+    Teleports to the specified coordinates.   </p>
+<h2>Tilde Notation</h2>
+<p>Using ~ before a number for a coordinate will get the coordinate relative to the executor. <br />
+All coordinates are based on the tile coordinate, not the world coordinate.    </p>
+<h2>Refer a Type</h2>
+<p>For a param that is not a string/int, the following syntax may be used for some commands. <br />
+<code>tile:x,y</code> <code>team:teamnumber</code> <code>block|floor|item|fx|liquid|bullet:name</code> <code>seffect:statuseffectname</code> <code>target:targetselector</code> <code>js:null|undefined|this</code></p>
+<h2>Target Selectors</h2>
+<p><code>@s</code> The executor of the command.
+<code>@sb</code> The block of the executor of the command.
+<code>@se</code> The tile entity of the executor of the command.
+<code>@p</code> The player(not to be confused with a single player). <br />
+<code>@a</code> All players. <br />
+<code>@u</code> All units except players. <br />
+<code>@t</code> Is a <code>this</code> of the origin command block. Use only when you know what you are doing. <br />
+<code>@c[tagname]</code> A cache of the unit tagged by the Unit Tagger. <br />
+<code>x,y</code> The tile at the position. <br />
+<code>@e</code> All entities. Tile entities are excluded by default. Target arguments may be used(WIP!).   </p>
+<h3>Target Arguments(WIP!)</h3>
+<p>Target arguments filter targets. <br />
+The format is <code>[argument1=value,argument2=value,...]</code>, and <code>=!</code> may replace <code>=</code> to exclude, not include. <br />
+Use it next to Target Selectors with no whitespace in between. For example: <code>@e[type=unit]</code>. <br />
++ type <br />
+<code>player</code> <code>unit</code>(excludes players) <code>mob</code>(players&amp;units) <code>bullet</code> <code>tile</code>(tile entity, not a tile) <code>effect</code> <code>groundEffect</code> <code>alleffect</code>(effects&amp;groundEffects) <code>puddle</code> <code>shield</code> <code>fire</code>   </p>
+<h2>Block List</h2>
+<p>This is the full list of blocks, as of version 104. <br />
+  ```
+  //environment
+  air, spawn, deepwater, water, taintedWater, tar, stone, craters, charr, sand, darksand, ice, snow, darksandTaintedWater,
+  holostone, rocks, sporerocks, icerocks, cliffs, sporePine, snowPine, pine, shrubs, whiteTree, whiteTreeDead, sporeCluster,
+  iceSnow, sandWater, darksandWater, duneRocks, sandRocks, moss, sporeMoss, shale, shaleRocks, shaleBoulder, sandBoulder, grass, salt,
+  metalFloor, metalFloorDamaged, metalFloor2, metalFloor3, metalFloor5, ignarock, magmarock, hotrock, snowrocks, rock, snowrock, saltRocks,
+  darkPanel1, darkPanel2, darkPanel3, darkPanel4, darkPanel5, darkPanel6, darkMetal,
+  pebbles, tendrils,</p>
+<p>//ores
+  oreCopper, oreLead, oreScrap, oreCoal, oreTitanium, oreThorium,</p>
+<p>//crafting
+  siliconSmelter, kiln, graphitePress, plastaniumCompressor, multiPress, phaseWeaver, surgeSmelter, pyratiteMixer, blastMixer, cryofluidMixer,
+  melter, separator, sporePress, pulverizer, incinerator, coalCentrifuge,</p>
+<p>//sandbox
+  powerSource, powerVoid, itemSource, itemVoid, liquidSource, liquidVoid, message, illuminator,</p>
+<p>//defense
+  copperWall, copperWallLarge, titaniumWall, titaniumWallLarge, plastaniumWall, plastaniumWallLarge, thoriumWall, thoriumWallLarge, door, doorLarge,
+  phaseWall, phaseWallLarge, surgeWall, surgeWallLarge, mender, mendProjector, overdriveProjector, forceProjector, shockMine,
+  scrapWall, scrapWallLarge, scrapWallHuge, scrapWallGigantic, thruster, //ok, these names are getting ridiculous, but at least I don't have humongous walls yet</p>
+<p>//transport
+  conveyor, titaniumConveyor, armoredConveyor, distributor, junction, itemBridge, phaseConveyor, sorter, invertedSorter, router, overflowGate, massDriver,</p>
+<p>//liquids
+  mechanicalPump, rotaryPump, thermalPump, conduit, pulseConduit, platedConduit, liquidRouter, liquidTank, liquidJunction, bridgeConduit, phaseConduit,</p>
+<p>//power
+  combustionGenerator, thermalGenerator, turbineGenerator, differentialGenerator, rtgGenerator, solarPanel, largeSolarPanel, thoriumReactor,
+  impactReactor, battery, batteryLarge, powerNode, powerNodeLarge, surgeTower, diode,</p>
+<p>//production
+  mechanicalDrill, pneumaticDrill, laserDrill, blastDrill, waterExtractor, oilExtractor, cultivator,</p>
+<p>//storage
+  coreShard, coreFoundation, coreNucleus, vault, container, unloader, launchPad, launchPadLarge,</p>
+<p>//turrets
+  duo, scatter, scorch, hail, arc, wave, lancer, swarmer, salvo, fuse, ripple, cyclone, spectre, meltdown,</p>
+<p>//units
+  commandCenter, draugFactory, spiritFactory, phantomFactory, wraithFactory, ghoulFactory, revenantFactory, daggerFactory, crawlerFactory, titanFactory,
+  fortressFactory, repairPoint,</p>
+<p>//upgrades
+  dartPad, deltaPad, tauPad, omegaPad, javelinPad, tridentPad, glaivePad;
+  ```</p>
+<h2>Particle List</h2>
+<p>This is the full list of effects, as of version 104. <br />
+<code>none, placeBlock, breakBlock, smoke, spawn, tapBlock, select,
+  vtolHover, unitDrop, unitPickup, unitLand, pickup, healWave, heal, landShock, reactorsmoke, nuclearsmoke, nuclearcloud,
+  redgeneratespark, generatespark, fuelburn, plasticburn, pulverize, pulverizeRed, pulverizeRedder, pulverizeSmall, pulverizeMedium,
+  producesmoke, smeltsmoke, formsmoke, blastsmoke, lava, doorclose, dooropen, dooropenlarge, doorcloselarge, purify, purifyoil, purifystone, generate,
+  mine, mineBig, mineHuge, smelt, teleportActivate, teleport, teleportOut, ripple, bubble, launch,
+  healBlock, healBlockFull, healWaveMend, overdriveWave, overdriveBlockFull, shieldBreak, hitBulletSmall, hitFuse,
+  hitBulletBig, hitFlameSmall, hitLiquid, hitLaser, hitLancer, hitMeltdown, despawn, flakExplosion, blastExplosion,
+  plasticExplosion, artilleryTrail, incendTrail, missileTrail, absorb, flakExplosionBig, plasticExplosionFlak, burning, fire,
+  fireSmoke, steam, fireballsmoke, ballfire, freezing, melting, wet, oily, overdriven, dropItem, shockwave,
+  bigShockwave, nuclearShockwave, explosion, blockExplosion, blockExplosionSmoke, shootSmall, shootHeal, shootSmallSmoke, shootBig, shootBig2, shootBigSmoke,
+  shootBigSmoke2, shootSmallFlame, shootPyraFlame, shootLiquid, shellEjectSmall, shellEjectMedium,
+  shellEjectBig, lancerLaserShoot, lancerLaserShootSmoke, lancerLaserCharge, lancerLaserChargeBegin, lightningCharge, lightningShoot,
+  unitSpawn, spawnShockwave, magmasmoke, impactShockwave, impactcloud, impactsmoke, dynamicExplosion, padlaunch, commandSend, coreLand;</code></p>
+
+    </content>
+  </body>
+</html>
